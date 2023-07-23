@@ -1,0 +1,9 @@
+body {
+  background-color: #f7f7f7;
+}
+
+.like-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}

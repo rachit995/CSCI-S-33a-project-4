@@ -1,0 +1,44 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+  <div class="my-5 d-flex w-100 justify-content-between">
+    <div>
+      <h1 class="display-4 mb-4">{{ profile.username }}</h1>
+      <p>
+        <strong>Followers:</strong>
+        <span id="follower-count">{{ profile.followers.count }}</span>
+      </p>
+      <p>
+        <strong>Following:</strong>
+        <span id="following-count">{{ profile.following.count }}</span>
+      </p>
+    </div>
+    <div>
+      {% if user.is_authenticated %}
+        {% if profile.username != request.user.username %}
+          {% if request.user in profile.followers.all %}
+            <button class="btn btn-danger"
+                    id="follow-button"
+                    data-user_id="{{ profile.id }}">
+              <i class="fas fa-user-check"></i>
+              Unfollow
+            </button>
+          {% else %}
+            <button class="btn btn-primary"
+                    id="follow-button"
+                    data-user_id="{{ profile.id }}">
+              <i class="fas fa-user-plus"></i>
+              Follow
+            </button>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  <div id="post-list">
+    {% for post in posts %}
+      {% include 'network/post.html' %}
+    {% endfor %}
+  </div>
+  {% include 'network/helper/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+    <div class="my-5">
+        <h1 class="display-4">Following</h1>
+    </div>
+    <div id="post-list">
+        {% for post in posts %}
+            {% include 'network/post.html' %}
+        {% empty %}
+            <p class="lead mb-5">No posts to display.</p>
+        {% endfor %}
+    </div>
+    {% include 'network/helper/pagination.html' %}
+{% endblock %}
+{% block script %}
+    <script src="{% static 'network/index-script.js' %}"></script>
+{% endblock %}
