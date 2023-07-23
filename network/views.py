@@ -138,6 +138,10 @@ def posts(request):
         data = json.loads(request.body)
         text = data.get("text", "")
         user = request.user
+        if len(text) > MAX_POST_LENGTH:
+            return JsonResponse(
+                {"error": "Post must be 280 characters or less."}, status=400
+            )
         new_post = Post(user=user, text=text)
         new_post.save()
         return JsonResponse(
@@ -164,8 +168,12 @@ def post(request, post_id):
         post = Post.objects.get(pk=post_id)
         if post.user != request.user:
             return JsonResponse(
-                {"message": "You are not allowed to edit this post."},
+                {"error": "You are not allowed to edit this post."},
                 status=403,
+            )
+        if len(text) > MAX_POST_LENGTH:
+            return JsonResponse(
+                {"error": "Post must be 280 characters or less."}, status=400
             )
         post.text = text
         post.save()
@@ -258,6 +266,11 @@ def follow(request, user_id):
     if request.method == "PUT":
         user = request.user
         following = User.objects.get(pk=user_id)
+        if user == following:
+            return JsonResponse(
+                {"error": "You are not allowed to follow yourself."},
+                status=403,
+            )
         if user in following.followers.all():
             following.followers.remove(user)
             following.save()

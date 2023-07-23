@@ -25,7 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(response => response.json())
         .then(result => {
-          window.location.reload();
+          if (result.error) {
+            alert(result.error);
+          } else {
+            window.location.reload();
+          }
         });
       return false;
     }
