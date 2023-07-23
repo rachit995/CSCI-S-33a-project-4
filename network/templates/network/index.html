@@ -6,7 +6,6 @@
     </div>
     {% if user.is_authenticated %}
         <form class="my-5" id="new-post-form">
-            {% csrf_token %}
             <div class="mb-3">
                 <label for="new-post-text" class="form-label">
                     <strong>New Post</strong>

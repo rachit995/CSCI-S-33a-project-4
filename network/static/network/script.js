@@ -15,13 +15,18 @@ document.addEventListener("DOMContentLoaded", function () {
         alert('Post text is empty!');
         return false;
       }
+      // Fetch the CSRF token from the hidden input field
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       // Send a POST request to the /posts route with the text of the
       // post in the body. Then, reload the page.
       fetch('/network/posts', {
         method: 'POST',
         body: JSON.stringify({
           text: document.querySelector('#new-post-text').value
-        })
+        }),
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
       })
         .then(response => response.json())
         .then(result => {
@@ -30,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             window.location.reload();
           }
+        }).catch(() => {
+          alert('Something went wrong!');
         });
       return false;
     }
@@ -38,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Like button functionality
   document.querySelectorAll('.like-button').forEach(button => {
     button.onclick = function () {
+      // Fetch the CSRF token from the hidden input field
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       // Get the post_id from the data-post_id attribute
       const post_id = button.dataset.post_id;
       const like_count = document.querySelector(`#like-count-${post_id}`);
@@ -45,6 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // URL. Then, update the like count and the color of the button.
       fetch(`/network/like/${post_id}`, {
         method: 'PUT',
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
       })
         .then(response => response.json())
         .then(result => {
@@ -71,13 +83,18 @@ document.addEventListener("DOMContentLoaded", function () {
       // from the form field
       const post_id = form.dataset.post_id;
       const text = document.querySelector(`#edit-text-${post_id}`).value;
+      // Fetch the CSRF token from the hidden input field
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       // Send a PUT request to the /posts/<post_id> route with the text
       // in the body. Then, update the post text and hide the modal.
       fetch(`/network/posts/${post_id}`, {
         method: 'PUT',
         body: JSON.stringify({
           text: text
-        })
+        }),
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
       })
         .then(response => response.json())
         .then(result => {
@@ -91,6 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const modal = bootstrap.Modal.getInstance(container);
             modal.hide();
           }
+        })
+        .catch(() => {
+          alert('Something went wrong!');
         });
       return false;
     }
@@ -101,11 +121,16 @@ document.addEventListener("DOMContentLoaded", function () {
   if (followButton) {
     // Get the user_id from the data-user_id attribute
     document.querySelector('#follow-button').onclick = function () {
+      // Fetch the CSRF token from the hidden input field
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       const user_id = document.querySelector('#follow-button').dataset.user_id;
       // Send a PUT request to the /follow/<user_id> route. Then, reload
       // the page.
       fetch(`/network/follow/${user_id}`, {
         method: 'PUT',
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
       })
         .then(response => response.json())
         .then(result => {
@@ -114,6 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             window.location.reload();
           }
+        })
+        .catch(() => {
+          alert('Something went wrong!');
         });
     }
   }

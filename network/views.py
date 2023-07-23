@@ -1,12 +1,11 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
 from .models import User, Post
@@ -122,7 +121,6 @@ def register(request):
         return render(request, "network/register.html")
 
 
-@csrf_exempt
 @login_required(login_url=login_url)
 def posts(request):
     """
@@ -149,7 +147,6 @@ def posts(request):
         )
 
 
-@csrf_exempt
 @login_required(login_url=login_url)
 def post(request, post_id):
     """
@@ -210,7 +207,6 @@ def profile(request, user_id):
     )
 
 
-@csrf_exempt
 @login_required(login_url=login_url)
 def like(request, post_id):
     """
@@ -250,7 +246,6 @@ def like(request, post_id):
             )
 
 
-@csrf_exempt
 @login_required(login_url=login_url)
 def follow(request, user_id):
     """
